@@ -1,0 +1,22 @@
+//  Copyright 2017 SpockerDotNet LLC
+//  Released under MIT License.
+
+/*
+    bootstrap.kick
+
+    This module will prepare the computer
+    environment for the Game engine.
+*/
+
+BasicUpstart2(start)
+
+#import "lib/common.kick"
+
+* = $0810   "MAIN"
+
+start:
+
+    lda #$01
+    sta $d021
+    rts
+    

@@ -1,0 +1,37 @@
+//  Copyright 2017 SpockerDotNet LLC
+//  Released under MIT License.
+
+
+/*
+    common.kick
+
+    common set of labels and variables
+*/
+
+#importonce
+
+//  ZERO PAGE
+
+//  parameters - used by many routines
+.label parm1 = $02
+.label parm2 = parm1 + 2
+.label parm3 = parm2 + 2
+.label parm4 = parm3 + 2
+.label parm5 = parm4 + 2
+.label parm6 = parm5 + 2
+.label parm7 = parm6 + 2
+
+//  temporary - used by many different routines
+.label temp1 = parm6 + 2
+.label temp2 = temp1 + 2
+.label temp3 = temp2 + 2
+.label temp4 = temp3 + 2
+.label temp5 = temp4 + 2
+.label temp6 = temp5 + 2
+
+//  return - data stored by a routine
+.label rtrn1 = temp6 + 2
+.label rtrn2 = rtrn1 + 2
+
+//  ROUTINES
+

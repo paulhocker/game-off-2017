@@ -1,0 +1,140 @@
+//  Copyright 2017 SpockerDotNet LLC
+//  Released under MIT License.
+
+/*
+    bits.kick
+
+    this library contains useful things
+    for bit manipulation on a 65xx
+    processor
+
+    note:
+
+    most of this was taken from the useful functions
+    in the cavelib repo here
+
+    https://gitlab.com/noop/Cavelib/blob/master
+
+*/
+
+// get low byte from a 16bit address passed to a pseudo command
+// or the address of a low byte of a 16 bit pointer
+// depending on whether the parameter is immediate(#) or not
+.function low_pointer(target) 
+{ 
+  .if(target.getType() == AT_IMMEDIATE)
+    .return CmdArgument( AT_IMMEDIATE, <target.getValue() )
+    
+  .return CmdArgument( AT_ABSOLUTE, target.getValue() )
+}
+
+// get high byte from a 16bit address passed to a pseudo command
+// or the address of a high byte of a 16 bit pointer
+// depending on whether the parameter is immediate(#) or not
+.function high_pointer(target) 
+{ 
+  .if(target.getType() == AT_IMMEDIATE)
+    .return CmdArgument( AT_IMMEDIATE, >target.getValue() )
+    
+  .return CmdArgument( AT_ABSOLUTE, target.getValue()+1 )
+}
+
+// get high byte with indirection support
+.function get_high(target)
+{
+  .return high_pointer(target)
+}
+// get low byte with indirection support
+.function get_low(target)
+{
+  .return low_pointer(target)
+}
+
+// fetch a pointer from source_address and store into (pname,pname+1)
+//
+// e.g. if #$0011 is given, 11 and 00 are stored into pname and pname+1
+//      if $0011 is given, the values read from $0011 and $0012
+//                         are stored into pname and pname+1
+//
+.pseudocommand fetch_pointer pname : source_address
+{
+  lda low_pointer(source_address)
+  sta pname.getValue()
+  lda high_pointer(source_address)
+  sta pname.getValue()+1
+}
+
+.pseudocommand fetch_value tname : pointer_to_source
+{
+  ldy #$00
+  lda (pointer_to_source.getValue()),y
+  sta tname.getValue()
+  iny
+  lda (pointer_to_source.getValue()),y
+  sta tname.getValue()+1
+}
+
+// ----------------------------------
+// bit setters, clearers and flippers
+// ----------------------------------
+// target = any standard 6510 assembly address expression
+//          valid for both lda and sta, e.g. $0801 or $0002,x
+//          (no immediate addresses allowed because of sta in use)
+.pseudocommand   set_bit0 target { lda target; ora #$01; sta target; }
+.pseudocommand   set_bit1 target { lda target; ora #$02; sta target; }
+.pseudocommand   set_bit2 target { lda target; ora #$04; sta target; }
+.pseudocommand   set_bit3 target { lda target; ora #$08; sta target; }
+.pseudocommand   set_bit4 target { lda target; ora #$10; sta target; }
+.pseudocommand   set_bit5 target { lda target; ora #$20; sta target; }
+.pseudocommand   set_bit6 target { lda target; ora #$40; sta target; }
+.pseudocommand   set_bit7 target { lda target; ora #$80; sta target; }
+
+.pseudocommand clear_bit0 target { lda target; and #$FE; sta target; }
+.pseudocommand clear_bit1 target { lda target; and #$FD; sta target; }
+.pseudocommand clear_bit2 target { lda target; and #$FB; sta target; }
+.pseudocommand clear_bit3 target { lda target; and #$F7; sta target; }
+.pseudocommand clear_bit4 target { lda target; and #$EF; sta target; }
+.pseudocommand clear_bit5 target { lda target; and #$DF; sta target; }
+.pseudocommand clear_bit6 target { lda target; and #$BF; sta target; }
+.pseudocommand clear_bit7 target { lda target; and #$7F; sta target; }
+
+.pseudocommand  flip_bit0 target { lda target; eor #$01; sta target; }
+.pseudocommand  flip_bit1 target { lda target; eor #$02; sta target; }
+.pseudocommand  flip_bit2 target { lda target; eor #$04; sta target; }
+.pseudocommand  flip_bit3 target { lda target; eor #$08; sta target; }
+.pseudocommand  flip_bit4 target { lda target; eor #$10; sta target; }
+.pseudocommand  flip_bit5 target { lda target; eor #$20; sta target; }
+.pseudocommand  flip_bit6 target { lda target; eor #$40; sta target; }
+.pseudocommand  flip_bit7 target { lda target; eor #$80; sta target; }
+
+// target  = any address expression EX-cluding immediate ones
+// pattern = any standard 6510 assembly address expression, including
+//           immediate ones like #$10 or #%11010111 
+.pseudocommand set_bits target:pattern { lda pattern; sta target; }
+.pseudocommand  or_bits target:pattern { lda target;  ora pattern; sta target; } 
+.pseudocommand and_bits target:pattern { lda target;  and pattern; sta target; } 
+.pseudocommand eor_bits target:pattern { lda target;  eor pattern; sta target; } 
+
+// set some address using using a specific register for the pattern
+// (keep in mind that not all addressing modes for target and pattern
+//  will work with all registers (e.g. indirect addressing works for A only))
+.pseudocommand     setA target:pattern { lda pattern; sta target; }
+.pseudocommand     setX target:pattern { ldx pattern; stx target; }
+.pseudocommand     setY target:pattern { ldy pattern; sty target; }
+
+// -----------
+// bit testers
+// -----------
+// target = any absolute address
+// after testing, the Z flag will contain 1 if the bit did not match
+//                and 0 if the bit did match
+// so  BNE will branch if the bit was 1
+// and BEQ will branch if the bit was 0
+.pseudocommand test_bit0 target { lda #$01; bit target; }
+.pseudocommand test_bit1 target { lda #$02; bit target; }
+.pseudocommand test_bit2 target { lda #$04; bit target; }
+.pseudocommand test_bit3 target { lda #$08; bit target; }
+.pseudocommand test_bit4 target { lda #$10; bit target; }
+.pseudocommand test_bit5 target { lda #$20; bit target; }
+.pseudocommand test_bit6 target { lda #$40; bit target; }
+.pseudocommand test_bit7 target { lda #$80; bit target; }
