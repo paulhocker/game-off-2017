@@ -4,4 +4,3 @@ and Custom Character sets used in the Game.
 Tools:
 
     CharPad 2.0 [http://www.subchristsoftware.com/charpad.htm]
-    SpritePad 2.0 [http://www.subchristsoftware.com/spritepad.htm]

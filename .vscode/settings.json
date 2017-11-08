@@ -2,9 +2,14 @@
     "editor.fontFamily": "Consolas, 'C64 Pro Mono Regular', 'Courier New', monospace",
     "editor.fontSize": 14,
     "workbench.colorTheme": "Tomorrow Night Blue",
-    "kickass.assemblerPath": "C:\\Development\\Tools\\6502\\Assemblers\\kickass\\kickass-4.15\\kickass.jar",
-    "kickass.javaPath": "C:\\Development\\Libs\\Java\\jdk1.8\\bin\\java.exe",
-    "kickass.emulatorPath": "C:\\Games2\\Emulators\\Commodore\\WinVICE\\WinVICE-2.4.32\\",
-    "kickass.emulatorBin": "x64sc.exe",
-    "editor.cursorStyle": "block"
+    "editor.cursorStyle": "block",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/.prg": true,
+        "**/.sym": true
     }
+}
