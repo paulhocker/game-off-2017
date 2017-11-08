@@ -1,0 +1,14 @@
+#importonce
+
+.label VIC_SCROLY   = $d011
+.label VIC_VICIRQ   = $d019
+
+//  VIC-II COLOR REGISTERS
+
+.label VIC_EXTCOL   = $d020     //  border color
+.label VIC_BGCOL0   = $d021     //  background color 0
+.label VIC_BGCOL1   = $d022     //  background color 1  
+.label VIC_BGCOL2   = $d023
+.label VIC_BGCOL3   = $d024
+.label VIC_SPMC0    = $d025
+.label VIC_SPMC1    = $d026

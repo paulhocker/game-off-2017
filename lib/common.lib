@@ -1,11 +1,11 @@
-//  Copyright 2017 SpockerDotNet LLC
-//  Released under MIT License.
-
-
 /*
-    common.kick
+    copyright 2017 SpockerDotNet LLC
+    released under MIT License.
 
-    common set of labels and variables
+    common.asm
+
+    common routines, variables and functions
+
 */
 
 #importonce

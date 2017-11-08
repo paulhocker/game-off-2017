@@ -17,6 +17,8 @@
 
 */
 
+#importonce
+
 // get low byte from a 16bit address passed to a pseudo command
 // or the address of a low byte of a 16 bit pointer
 // depending on whether the parameter is immediate(#) or not
