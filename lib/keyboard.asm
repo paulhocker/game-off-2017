@@ -2,9 +2,9 @@
     copyright 2017 SpockerDotNet LLC
     released under MIT License.
 
-    joystick.asm
+    keyboard.asm
 
     a module for handling and managing
-    joystick input
+    keyboard input
 
 */
