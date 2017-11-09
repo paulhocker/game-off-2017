@@ -14,13 +14,17 @@
 InitGame: {
 
     initRasterInterrupt(rasterPos1, Raster1)
+
+loop:
+
     rts
 }
 
 //  main game interrupt
 Raster1: {
 
-    cld
+    //cld
+    startInterrupt()
 
     setInterruptVector(rasterPos2, Raster2)
 
@@ -28,33 +32,35 @@ Raster1: {
     sta VIC_EXTCOL
     sta VIC_BGCOL0
 
-    jmp $ea81
+    endInterrupt()
 }
 
 //  lower panel interrupt
 Raster2: {
 
-    cld
+    //cld
+    startInterrupt()
 
     setInterruptVector(rasterPos3, Raster3)
 
     inc VIC_EXTCOL
-    inc VIC_BGCOL0
+    //inc VIC_BGCOL0
 
-    jmp $ea81
+    endInterrupt() 
 }
 
 //  misc interrupt
 Raster3: {
 
-    cld
+    //cld
+    startInterrupt()
 
     setInterruptVector(rasterPos1, Raster1)
 
     inc VIC_EXTCOL
-    inc VIC_BGCOL0
+    //inc VIC_BGCOL0
 
-    jmp $ea81
+    endInterrupt()
 }
 
 //  STORAGE

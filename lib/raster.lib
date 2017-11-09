@@ -18,36 +18,64 @@
 
     sei
 
-    //  set the next interrupt to our preferred location
-    setInterruptVector(position, routine)
-
     //  set the timer interrupt off
     lda #$7f
     sta $dc0d
+    sta $dd0d
 
     //  set the raster interrupt on
     lda #$01
     sta $d01a
 
-    lda $d011
-    and #$7f
-    sta $d011
+    lda #$35
+    sta $01
 
-    lda $dc0d
+    //  set the next interrupt to our preferred location
+    setInterruptVector(position, routine)
+
+    asl $d019
+    bit $dc0d
+    bit $dd0d
+
     cli
+}
+
+.macro startInterrupt() {
+
+    pha
+    txa
+    pha
+    tya
+    pha
+
+}
+
+.macro endInterrupt() {
+
+    asl $d019
+
+    pla
+    tay
+    pla
+    tax
+    pla
+
+    rti
 }
 
 .macro setInterruptVector(position, routine) {
 
-    lda #27
-    sta $d011
-    inc VIC_VICIRQ
-
-    lda #<routine
-    sta VECTOR_IRQ
-    lda #>routine
-    sta VECTOR_IRQ + 1
-
     lda #position
     sta $d012
+
+    lda #$1b
+    sta $d011
+
+    lda #<routine
+    //sta VECTOR_IRQ
+    sta $fffe
+    lda #>routine
+    //sta VECTOR_IRQ + 1
+    sta $ffff
+
 }
