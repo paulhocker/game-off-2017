@@ -17,11 +17,13 @@ BasicUpstart2(Main)
 
 Main:
 
+    jsr InitGame
+    rts
+/*
     lda #COLOR_BLACK
     sta VIC_BGCOL0
-    jsr InitGame
-    jmp *
-
+    rts
+*/
 #import "game.asm" 
 
 

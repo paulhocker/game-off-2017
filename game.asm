@@ -32,6 +32,13 @@ Raster1: {
     sta VIC_EXTCOL
     sta VIC_BGCOL0
 
+    lda %11011000
+    sta $d016
+    lda #$10
+    sta VIC_BGCOL1
+    lda #$11
+    sta VIC_BGCOL2
+
     endInterrupt()
 }
 
@@ -43,6 +50,8 @@ Raster2: {
 
     setInterruptVector(rasterPos3, Raster3)
 
+    lda %11001000
+    sta $d016
     inc VIC_EXTCOL
     //inc VIC_BGCOL0
 

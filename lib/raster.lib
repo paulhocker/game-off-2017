@@ -27,9 +27,6 @@
     lda #$01
     sta $d01a
 
-    lda #$35
-    sta $01
-
     //  set the next interrupt to our preferred location
     setInterruptVector(position, routine)
 
@@ -42,25 +39,13 @@
 
 .macro startInterrupt() {
 
-    pha
-    txa
-    pha
-    tya
-    pha
-
+    cld
 }
 
 .macro endInterrupt() {
 
     asl $d019
-
-    pla
-    tay
-    pla
-    tax
-    pla
-
-    rti
+    jmp $ea31
 }
 
 .macro setInterruptVector(position, routine) {
@@ -72,10 +57,8 @@
     sta $d011
 
     lda #<routine
-    //sta VECTOR_IRQ
-    sta $fffe
+    sta VECTOR_IRQ
     lda #>routine
-    //sta VECTOR_IRQ + 1
-    sta $ffff
+    sta VECTOR_IRQ + 1
 
 }
