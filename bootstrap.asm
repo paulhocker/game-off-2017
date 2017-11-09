@@ -20,7 +20,7 @@ Main:
     lda #COLOR_BLACK
     sta VIC_BGCOL0
     jsr InitGame
-    rts
+    jmp *
 
 #import "game.asm" 
 
