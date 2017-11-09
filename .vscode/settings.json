@@ -9,7 +9,7 @@
         "**/.hg": true,
         "**/CVS": true,
         "**/.DS_Store": true,
-        "**/.prg": true,
-        "**/.sym": true
+        "**/*.prg": true,
+        "**/*.sym": true
     }
 }

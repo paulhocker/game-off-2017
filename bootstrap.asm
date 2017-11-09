@@ -8,17 +8,21 @@
     engine and prepare the computer
 */
 
-BasicUpstart2(Main)
+#import "lib/vic2.lib"
+#import "lib/common.lib"
+
+BasicUpstart2(Main) 
 
 * = $0810   "MAIN"
 
 Main:
 
+    lda #COLOR_BLACK
+    sta VIC_BGCOL0
     jsr InitGame
     rts
 
-#import "game.asm"
+#import "game.asm" 
 
-#import "lib/common.lib"
 
     

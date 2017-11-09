@@ -12,3 +12,8 @@
 .label VIC_BGCOL3   = $d024
 .label VIC_SPMC0    = $d025
 .label VIC_SPMC1    = $d026
+
+//  VIC-II COLORS
+
+.var COLOR_BLACK    = 00        //  color black
+.var COLOR_WHITE    = 01        //  color white

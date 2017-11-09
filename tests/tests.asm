@@ -1,7 +1,17 @@
 #import "./64spec.asm"
+#import "../lib/bits.lib"
 
-sfspec: :init_spec()
+sfspec: 
+
+  init_spec()
   
-  // TODO: Add assertions here
+    lda #$42
+    assert_a_equal #$42
 
-  :finish_spec()
+    lda get_low($d021)
+    assert_a_equal #$21
+
+    lda get_high($d021)
+    assert_a_equal #$d0
+
+  finish_spec()
