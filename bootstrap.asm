@@ -17,7 +17,10 @@ BasicUpstart2(Main)
 
 Main:
 
+    disable_basic_rom()  
     jsr InitGame
+    //jmp *
+    enable_basic_rom()
     rts
 /*
     lda #COLOR_BLACK

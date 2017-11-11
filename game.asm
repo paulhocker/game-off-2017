@@ -32,7 +32,7 @@ Raster1: {
     sta VIC_EXTCOL
     sta VIC_BGCOL0
 
-    lda %11011000
+    lda #$18
     sta $d016
     lda #$10
     sta VIC_BGCOL1
@@ -50,7 +50,7 @@ Raster2: {
 
     setInterruptVector(rasterPos3, Raster3)
 
-    lda %11001000
+    lda #$08
     sta $d016
     inc VIC_EXTCOL
     //inc VIC_BGCOL0

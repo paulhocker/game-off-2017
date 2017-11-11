@@ -9,6 +9,7 @@
 */
 
 #importonce
+#import "./bits.lib"
 
 //  ZERO PAGE
 
@@ -34,4 +35,12 @@
 .label rtrn2 = rtrn1 + 2
 
 //  ROUTINES
+
+.macro disable_basic_rom () {
+    clear_bit0 $0001
+}
+
+.macro enable_basic_rom () {
+    set_bit0 $0001
+}
 
