@@ -2,18 +2,18 @@
 //  Released under MIT License.
 
 /*
-    bits.kick
+  bits.kick
 
-    this library contains useful things
-    for bit manipulation on a 65xx
-    processor
+  this library contains useful things
+  for bit manipulation on a 65xx
+  processor
 
-    note:
+  note:
 
-    most of this was taken from the useful functions
-    in the cavelib repo here
+  most of this was taken from the useful functions
+  in the cavelib repo here
 
-    https://gitlab.com/noop/Cavelib/blob/master
+  https://gitlab.com/noop/Cavelib/blob/master
 
 */
 

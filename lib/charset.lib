@@ -1,0 +1,15 @@
+/*
+    copyright 2017 SpockerDotNet LLC
+    released under MIT License.
+
+    charset.asm
+
+    module for managing custom charsets
+
+*/
+
+#importonce
+
+#import "common.lib"
+#import "vic2.lib"
+#import "bits.lib"

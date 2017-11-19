@@ -9,6 +9,7 @@
 */
 
 #importonce
+
 #import "./bits.lib"
 
 //  ZERO PAGE
@@ -19,28 +20,79 @@
 .label parm3 = parm2 + 2
 .label parm4 = parm3 + 2
 .label parm5 = parm4 + 2
-.label parm6 = parm5 + 2
-.label parm7 = parm6 + 2
 
 //  temporary - used by many different routines
-.label temp1 = parm6 + 2
+.label temp1 = parm5 + 2
 .label temp2 = temp1 + 2
 .label temp3 = temp2 + 2
 .label temp4 = temp3 + 2
 .label temp5 = temp4 + 2
-.label temp6 = temp5 + 2
 
 //  return - data stored by a routine
-.label rtrn1 = temp6 + 2
+.label rtrn1 = temp5 + 2
 .label rtrn2 = rtrn1 + 2
+.label rtrn3 = rtrn1 + 2
+.label rtrn4 = rtrn1 + 2
+.label rtrn5 = rtrn1 + 2
 
-//  ROUTINES
+.label zero_page_start = rtrn5 + 2
 
-.macro disable_basic_rom () {
-    clear_bit0 $0001
+//  MACROS
+
+.macro reset_memory () {
+    lda #$37
+    sta $01
 }
 
-.macro enable_basic_rom () {
-    set_bit0 $0001
+.macro clear_screen(address, code) {
+
+    lda #code
+    ldx #0 
+
+    !:
+
+    sta address, x
+    sta address + $100, x
+    sta address + $200, x
+    sta address + $300, x
+    inx
+    bne !-
 }
+
+.macro clear_color(code) {
+    
+    lda #code
+    ldx #0 
+
+    !:
+
+    sta $d800, x
+    sta $d800 + $100, x
+    sta $d800 + $200, x
+    sta $d800 + $300, x
+    inx
+    bne !-    
+}
+
+//  VIC-II COLORS
+
+.const COLOR_BLACK = 0
+.const COLOR_WHITE = 1
+.const COLOR_RED = 2
+.const COLOR_CYAN = 3
+.const COLOR_PURPLE = 4
+.const COLOR_GREEN = 5
+.const COLOR_BLUE = 6
+.const COLOR_YELLOW = 7
+.const COLOR_ORANGE = 8
+.const COLOR_BROWN = 9
+.const COLOR_LIGHT_RED = 10
+.const COLOR_DARK_GRAY = 11
+.const COLOR_DARK_GREY = 11
+.const COLOR_GRAY = 12
+.const COLOR_GREY = 12
+.const COLOR_LIGHT_GREEN = 13
+.const COLOR_LIGHT_BLUE = 14
+.const COLOR_LIGHT_GRAY = 15
+.const COLOR_LIGHT_GREY = 15
 

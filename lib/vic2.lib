@@ -1,5 +1,7 @@
 #importonce
 
+.label VIC2         = $d000
+
 .label VIC_SCROLY   = $d011
 .label VIC_VICIRQ   = $d019
 
@@ -13,7 +15,8 @@
 .label VIC_SPMC0    = $d025
 .label VIC_SPMC1    = $d026
 
-//  VIC-II COLORS
+.label VIC_ENABLE   = VIC2 + 21
 
-.var COLOR_BLACK    = 00        //  color black
-.var COLOR_WHITE    = 01        //  color white
+.label VIC_POSX1    = VIC2 + 0
+.label VIC_POSY1    = VIC2 + 1
+

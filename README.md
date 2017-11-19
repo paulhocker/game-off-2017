@@ -28,3 +28,17 @@ Some Seconday Goals:
     - more levels (the original had three levels)
     - packaging of Vice and the Game for "non emulator" folks
     - distribution on ich.io
+
+Naming Conventions:
+
+In most cases Kick Ass Scripting follows the JavaScript naming conventions
+
+.label      UPPERCASE                           eg.     .label MAIN = $0000
+.var        lowerCamelCase                              .var playerScore = 0
+.macro      lower_case_with_underscore                  .macro clear_screen()
+.function   lowerCamelCase                              .function clearScreen()
+.pseudo     UPPERCASE_WITH_UNDERSCORE                   .pseudo LDA_X
+.namespace  UpperCamelCase                              .namespace ActorData {}
+
+
+

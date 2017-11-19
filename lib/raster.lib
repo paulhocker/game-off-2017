@@ -9,12 +9,14 @@
 
 */
 
+#importonce
+
 #import "./bits.lib"
 #import "./vic2.lib" 
 
 .label VECTOR_IRQ = $0314
 
-.macro initRasterInterrupt(position, routine) {
+.macro init_raster_interrupt(position, routine) {
 
     sei
 
@@ -28,7 +30,7 @@
     sta $d01a
 
     //  set the next interrupt to our preferred location
-    setInterruptVector(position, routine)
+    set_interrupt_vector(position, routine)
 
     asl $d019
     bit $dc0d
@@ -37,18 +39,18 @@
     cli
 }
 
-.macro startInterrupt() {
+.macro start_interrupt() {
 
     cld
 }
 
-.macro endInterrupt() {
+.macro end_interrupt() {
 
     asl $d019
     jmp $ea31
 }
 
-.macro setInterruptVector(position, routine) {
+.macro set_interrupt_vector(position, routine) {
 
     lda #position
     sta $d012

@@ -8,3 +8,12 @@
     joystick input
 
 */
+
+#importonce
+
+
+.var JOY_UP     = 1
+.var JOY_DOWN   = 2
+.var JOY_LEFT   = 4
+.var JOY_RIGHT  = 8
+.var JOY_FIRE   = 16

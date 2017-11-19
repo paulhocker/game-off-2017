@@ -1,76 +1,32 @@
-#import "lib/raster.lib"
-#import "lib/vic2.lib"
+/*
+    copyright 2017 SpockerDotNet LLC
+    released under MIT License.
 
-//  LABELS
+    game.asm
 
-//  VARS
+    game screen
+*/
+#importonce
 
-.var rasterPos1 = 0
-.var rasterPos2 = 220
-.var rasterPos3 = 250
+#import "include.asm"
 
-//  GAME INIT
 
-InitGame: {
+/*
+    location of the screen and
+    screen buffer
+*/
 
-    initRasterInterrupt(rasterPos1, Raster1)
+.label GAME_SCREEN = $9800
+.label GAME_BUFFER = $9c00
 
-loop:
+GAME: {
 
+start:
+
+    lda #COLOR_GREEN
+    sta $d021
+
+    change_game_state(STATE_TITLE)
     rts
+    
 }
-
-//  main game interrupt
-Raster1: {
-
-    //cld
-    startInterrupt()
-
-    setInterruptVector(rasterPos2, Raster2)
-
-    lda #$00
-    sta VIC_EXTCOL
-    sta VIC_BGCOL0
-
-    lda #$18
-    sta $d016
-    lda #$10
-    sta VIC_BGCOL1
-    lda #$11
-    sta VIC_BGCOL2
-
-    endInterrupt()
-}
-
-//  lower panel interrupt
-Raster2: {
-
-    //cld
-    startInterrupt()
-
-    setInterruptVector(rasterPos3, Raster3)
-
-    lda #$08
-    sta $d016
-    inc VIC_EXTCOL
-    //inc VIC_BGCOL0
-
-    endInterrupt() 
-}
-
-//  misc interrupt
-Raster3: {
-
-    //cld
-    startInterrupt()
-
-    setInterruptVector(rasterPos1, Raster1)
-
-    inc VIC_EXTCOL
-    //inc VIC_BGCOL0
-
-    endInterrupt()
-}
-
-//  STORAGE
-
