@@ -15,9 +15,10 @@ HELP: {
 
 start:
 
-    lda #STATE_TITLE
-    sta GAME_STATE
+    lda #COLOR_YELLOW
+    sta VIC2_EXTCOL
+    sta VIC2_BGCOL0
 
-    rts
-    
+    jmp MAIN.start
+
 }

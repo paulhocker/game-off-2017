@@ -2,21 +2,61 @@
 
 .label VIC2         = $d000
 
-.label VIC_SCROLY   = $d011
-.label VIC_VICIRQ   = $d019
+.label VIC2_SCROLY  = $d011
+.label VIC2_VICIRQ  = $d019
 
 //  VIC-II COLOR REGISTERS
 
-.label VIC_EXTCOL   = $d020     //  border color
-.label VIC_BGCOL0   = $d021     //  background color 0
-.label VIC_BGCOL1   = $d022     //  background color 1  
-.label VIC_BGCOL2   = $d023
-.label VIC_BGCOL3   = $d024
-.label VIC_SPMC0    = $d025
-.label VIC_SPMC1    = $d026
+.label VIC2_EXTCOL  = $d020     //  border color
+.label VIC2_BGCOL0  = $d021     //  background color 0
+.label VIC2_BGCOL1  = $d022     //  background color 1  
+.label VIC2_BGCOL2  = $d023
+.label VIC2_BGCOL3  = $d024
+.label VIC2_SPMC0   = $d025
+.label VIC2_SPMC1   = $d026
 
-.label VIC_ENABLE   = VIC2 + 21
+/*
+    Sprite Enable Registers
 
-.label VIC_POSX1    = VIC2 + 0
-.label VIC_POSY1    = VIC2 + 1
+    Bit 0: Enable Sprite 0
+*/
+.label VIC2_SPENA   = $d015     
+
+.label VIC2_SP0X    = $d000     
+.label VIC2_SP0Y    = $d001
+.label VIC2_SP1X    = $d002     
+.label VIC2_SP1Y    = $d003
+.label VIC2_SP2X    = $d004     
+.label VIC2_SP2Y    = $d005
+.label VIC2_SP3X    = $d006     
+.label VIC2_SP3Y    = $d007
+.label VIC2_SP4X    = $d008     
+.label VIC2_SP4Y    = $d009
+.label VIC2_SP5X    = $d00a     
+.label VIC2_SP5Y    = $d00b
+.label VIC2_SP6X    = $d00c     
+.label VIC2_SP6Y    = $d00d
+.label VIC2_SP7X    = $d00e     
+.label VIC2_SP7Y    = $d00f
+
+/*
+    Most Significant Bits (MSB) of Sprites 0-7 Horizonal Position
+
+    bit 0: Sprite 0 MSB
+    bit 1: Sprite 1 MSB
+    bit 2: Sprite 2 MSB
+    bit 3: Sprite 3 MSB
+    bit 4: Sprite 4 MSB
+    bit 5: Sprite 5 MSB
+    bit 6: Sprite 6 MSB
+    bit 7: Sprite 7 MSB
+
+    Setting one of these bits to 1 adds 256 to the horizontal
+    position of the corresponding sprite. Resetting one of
+    these bits to 0 restricts the horizontal position of the
+    corresponding sprite to a value of 255 or less.
+
+*/
+.label VIC2_MSGIX   = $d010
+
 

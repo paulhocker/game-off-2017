@@ -14,8 +14,10 @@ HISCORE: {
 
 start:
 
-    lda #STATE_TITLE
-    sta GAME_STATE
+    lda #COLOR_GREEN
+    sta VIC2_EXTCOL
+    sta VIC2_BGCOL0
 
-    rts
+    jmp MAIN.start
+
 }

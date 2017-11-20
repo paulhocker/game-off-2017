@@ -37,11 +37,12 @@
 .var rasterPos3 = 250
 
 //  GAME STATES
-.const STATE_INTRO      = 0
 .const STATE_TITLE      = 1
 .const STATE_HELP       = 2
 .const STATE_HISCORE    = 3
 .const STATE_GAME       = 4
+.const STATE_INTRO      = 5
+.const STATE_QUIT       = 0
 
 .macro change_game_state(state) {
     lda #state

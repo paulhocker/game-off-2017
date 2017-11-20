@@ -1,0 +1,16 @@
+#importonce
+#import "vic2.lib"
+
+.macro reset_sprites() {
+    lda #$00
+    sta VIC2_SPENA
+    .for (var i=0; i<7; i++) {
+        reset_sprite(i)
+    }
+}
+
+.macro reset_sprite(number) {
+    lda #$00
+    sta VIC2 + (number * 2)
+    sta VIC2 + (number * 2) + 1
+}

@@ -12,8 +12,33 @@
 #importonce
 
 
-.var JOY_UP     = 1
-.var JOY_DOWN   = 2
-.var JOY_LEFT   = 4
-.var JOY_RIGHT  = 8
-.var JOY_FIRE   = 16
+.const JOY_UP     = 1
+.const JOY_DOWN   = 2
+.const JOY_LEFT   = 4
+.const JOY_RIGHT  = 8
+.const JOY_FIRE   = 16
+
+.const JOY_PORT_A   = $dc00
+.const JOY_PORT_B   = $dc01
+
+
+/*
+    Read the Joystick and store
+    the value in the Address
+    provided
+
+*/
+.macro joystick_read(port, address) {
+
+    .if (port != JOY_PORT_A || port != JOY_PORT_B) {
+        .print "Invalid Joystick Port Given"
+        .asserterror
+    }
+
+    lda #$ff
+    sta port
+    lda port
+    eor #$ff
+    sta address
+}
+

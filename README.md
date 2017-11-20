@@ -33,7 +33,8 @@ Naming Conventions:
 
 In most cases Kick Ass Scripting follows the JavaScript naming conventions
 
-.label      UPPERCASE                           eg.     .label MAIN = $0000
+.label      UpperCamelCase                      eg.     .label Main = $0000 or Label: {}
+.label      lower_case_with_underscore                  .label mainLabel = $0000 or mainLabel: {} [internal]
 .var        lowerCamelCase                              .var playerScore = 0
 .macro      lower_case_with_underscore                  .macro clear_screen()
 .function   lowerCamelCase                              .function clearScreen()

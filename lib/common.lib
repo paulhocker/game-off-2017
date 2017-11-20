@@ -44,34 +44,60 @@
     sta $01
 }
 
-.macro clear_screen(address, code) {
+
+/*
+    A Block of Memory is an even amount
+    of Ram in 1024 byte increments
+*/
+.macro clear_memory_block(block, code) {
+
+    .var start = block * 1024
+    .print "start: " + toHexString(start)
 
     lda #code
-    ldx #0 
+    ldx #128
 
     !:
 
-    sta address, x
-    sta address + $100, x
-    sta address + $200, x
-    sta address + $300, x
-    inx
+    .for (var i=0; i<7; i++) {
+        sta start + (128 * i), x
+    }
+
+    dex
+    cpx #$00
     bne !-
 }
 
-.macro clear_color(code) {
-    
-    lda #code
-    ldx #0 
+/*
+    A Screen is a 1024 block of Ram
+*/
+.macro clear_screen(address, character) {
+    clear_memory_block(address, character)
+}
 
-    !:
+.macro clear_color(color) {
+    clear_memory_block(54, color)
+}
 
-    sta $d800, x
-    sta $d800 + $100, x
-    sta $d800 + $200, x
-    sta $d800 + $300, x
+.macro print_text(text, screen, delimiter) {
+
+    .var delim = delimiter.charAt(0)
+
+    ldx #$00
+
+!:  lda text, x
+    cmp #delim
+    beq exit
+    sta screen,x
     inx
-    bne !-    
+    jmp !-
+
+exit:
+
+}
+
+.macro debug_address(title) {
+    .print title + toHexString(*)
 }
 
 //  VIC-II COLORS
@@ -95,4 +121,8 @@
 .const COLOR_LIGHT_BLUE = 14
 .const COLOR_LIGHT_GRAY = 15
 .const COLOR_LIGHT_GREY = 15
+
+.const SYSTEM_NTSC = 0
+.const SYSTEM_PAL = 1
+
 

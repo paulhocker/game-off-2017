@@ -29,18 +29,14 @@ RASTER_1: {
     lda #%00001000
     sta $d018
 
-    lda #COLOR_BLACK
-    sta VIC_EXTCOL
-    sta VIC_BGCOL0
-
     lda #$18
     sta $d016
     lda #$10
-    sta VIC_BGCOL1
+    sta VIC2_BGCOL1
     lda #$11
-    sta VIC_BGCOL2
+    sta VIC2_BGCOL2
 
-    jsr MUSIC_PLAY
+    //jsr MUSIC_PLAY
 
     set_interrupt_vector(rasterPos2, RASTER_2)
 
@@ -53,7 +49,7 @@ RASTER_2: {
     start_interrupt()
 
     //  set screen and char memory
-    lda #%00000100
+    lda #%00001010
     sta $d018
 
     lda #$08
@@ -70,12 +66,8 @@ RASTER_3: {
     start_interrupt()
 
     //  set screen and char memory
-    lda #%00001000
+    lda #%00001010
     sta $d018
-
-    lda #COLOR_BLACK
-    sta VIC_EXTCOL
-    sta VIC_BGCOL0
 
     set_interrupt_vector(rasterPos1, RASTER_1)
 
