@@ -9,15 +9,30 @@
 */
 #importonce
 
-//  GAME VARIABLES
-.print "JOYSTICK: " + toHexString(*)
-JOYSTICK:       .byte 0
-.print "JOYSTICK_LAST: " + toHexString(*)
-JOYSTICK_LAST:  .byte 0
-.print "RASTER_COUNT: " + toHexString(*)
-RASTER_COUNT:   .byte 0
-.print "GAME_STATE: " + toHexString(*)
-GAME_STATE:     .byte 0
-.print "LAST_KEY: " + toHexString(*)
-LAST_KEY:       .byte 0
+//  VARIABLES
+
+.print "rasterCount: " + toHexString(*)
+rasterCount:   .byte 0
+
+.print "gameState: " + toHexString(*)
+gameState:     .byte 0
+
+.print "inputMode: " + toHexString(*)
+inputMode:      .byte 0
+
+.print "inputMove: " + toHexString(*)
+inputMove:      .byte 0
+
+.print "inputKey: " + toHexString(*)
+inputKey:       .byte 0
+
+.print "lives: " + toHexString(*)
+lives:          .byte 0
+
+.print "score: " + toHexString(*)
+score:          .byte 0,0,0
+
+.print "hiscore" + toHexString(*)
+hiscore:        .byte 0,0,0
+
 

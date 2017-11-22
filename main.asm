@@ -27,10 +27,12 @@ start:
 
 loop:
 
+    debug_address("MAIN.loop:")
+
     wait_raster()
     jsr clear
     
-    lda GAME_STATE
+    lda gameState
 
 !:  cmp #STATE_INTRO
     bne !+
@@ -77,51 +79,3 @@ exit:
     }
 
 }
-
-TEST_STATE: {
-
-    /*
-        simple routine to check keyboard
-        and change game state
-
-        not perfect but good for now
-
-    */
-
-get_key:
-
-    //keyboard_read(LAST_KEY)
-    lda LAST_KEY
-    sta $8000 + (40*22)
-
-!:  cmp #$51
-    bne !+
-    change_game_state(STATE_QUIT)
-
-!:  cmp #$31
-    bne !+
-    change_game_state(STATE_INTRO)
-
-!:  cmp #$32
-    bne !+
-    change_game_state(STATE_TITLE)
-
-!:  cmp #$33
-    bne !+
-    change_game_state(STATE_HELP)
-
-!:  cmp #$34
-    bne !+
-    change_game_state(STATE_HISCORE)
-
-!:  cmp #$35
-    bne !+
-    change_game_state(STATE_GAME)
-
-exit:
-
-!:  rts
-
-}
-
-

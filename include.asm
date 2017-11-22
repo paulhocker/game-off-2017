@@ -46,5 +46,5 @@
 
 .macro change_game_state(state) {
     lda #state
-    sta GAME_STATE
+    sta gameState
 }

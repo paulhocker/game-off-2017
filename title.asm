@@ -26,14 +26,16 @@ start:
 
 loop:
 
-    keyboard_read()
-    lda LAST_KEY
+    debug_address("TITLE.loop:")
+
+    keyboard_read(inputKey)
+    lda inputKey
     cmp #$20
     bne loop
 
     change_game_state(STATE_GAME)
     lda #$00
-    sta LAST_KEY
+    sta inputKey
 
     jmp MAIN.loop
 

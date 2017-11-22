@@ -25,21 +25,21 @@ start:
     sta VIC2_BGCOL0
 
     clear_screen(32, 0)
-    clear_color(1)
+    clear_color(COLOR_WHITE)
     print_text(TITLE, $8000+(40*22), "@")
 
 loop:
 
-    debug_address("INTRO.loop: ")
+    debug_address("INTRO.loop:")
 
-    keyboard_read()
-    lda LAST_KEY
+    keyboard_read(inputKey)
+    lda inputKey
     cmp #$20
     bne loop
 
     change_game_state(STATE_TITLE)
     lda #$00
-    sta LAST_KEY
+    sta inputKey
 
     jmp MAIN.loop
 

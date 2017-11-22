@@ -9,6 +9,8 @@
 #importonce
 
 #import "include.asm"
+#import "input.asm"
+#import "vars.asm"
 #import "lib/vic2.lib"
 #import "lib/raster.lib"
 #import "lib/common.lib"
@@ -25,6 +27,10 @@
 GAME: {
 
 start:
+
+    debug_address("GAME.start:")
+
+    set_input(INPUT_KEYBOARD)
 
     lda #COLOR_BLACK
     sta VIC2_EXTCOL
@@ -54,18 +60,48 @@ start:
     lda #$c3
     sta $83f8
 
+
+
 loop:
 
-    keyboard_read()
-    lda LAST_KEY
+    debug_address("GAME.loop:")
+
+    jsr INPUT.read
+
+    lda inputKey
     cmp #$20
-    bne loop
+    beq exit
+    
+    cmp #$01
+    beq inc_score
+
+    jmp loop
+
+exit:
 
     change_game_state(STATE_TITLE)
     lda #$00
-    sta LAST_KEY
+    sta inputKey
 
     jmp MAIN.loop
+
+inc_score:
+
+    sed
+    lda score 
+    clc
+    adc #$50
+    sta score
+    lda score + 1
+    adc #$02
+    sta score + 1
+    lda score + 2
+    adc #$00
+    sta score + 2
+    cld
+
+    jmp loop
+
 
 TITLE: .text "game@"
 

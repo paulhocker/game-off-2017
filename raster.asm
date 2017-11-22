@@ -9,10 +9,11 @@
 
 #importonce
 
+#import "include.asm"
+#import "vars.asm"
 #import "lib/raster.lib"
 #import "lib/vic2.lib"
 #import "lib/common.lib"
-#import "include.asm"
 
 .macro init_game_raster() {
 
@@ -55,6 +56,8 @@ RASTER_2: {
     lda #$08
     sta $d016
 
+    jsr DEBUG.show
+
     set_interrupt_vector(rasterPos3, RASTER_3)
 
     end_interrupt() 
@@ -71,18 +74,59 @@ RASTER_3: {
 
     set_interrupt_vector(rasterPos1, RASTER_1)
 
-    inc RASTER_COUNT
+    inc rasterCount
 
     end_interrupt()
 }
 
 WAIT_RASTER: {
-    lda RASTER_COUNT
+    lda rasterCount
     cmp #$01
     bcc WAIT_RASTER
     lda #$00
-    sta RASTER_COUNT
+    sta rasterCount
     rts
+}
+
+DEBUG: {
+
+    show: {
+
+        debug_address("DEBUG.show:")
+
+        ldy #$02
+        ldx #$02
+
+        !:
+
+        lda score, x
+
+        lsr
+        lsr 
+        lsr
+        lsr 
+
+        clc
+        adc #27
+        
+        sta MEM_SCREEN + 24 * 40, y
+
+        iny 
+
+        lda score, x
+        and #$0f 
+        clc
+        adc #27
+        sta MEM_SCREEN + 24 * 40, y 
+        iny 
+
+        dex 
+        bpl !-
+        ldx #$02
+        ldy #34
+
+        rts
+    }
 }
 
 .macro wait_raster() {

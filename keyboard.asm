@@ -411,6 +411,7 @@ KeyTable:
     .byte $2f, $1e, $3d, $ff, $ff, $3b, $2a, $1c  // "/", "^", "=", RIGHT SHIFT, HOME, ";", "*", "£"
     .byte $ff, $11, $ff, $20, $32, $ff, $1f, $31  // RUN STOP, "Q", "C=" (CMD), " " (SPC), "2", "CTRL", "<-", "1"
 
+    debug_address("Keyboard Vars:")
 BufferOld:
     .byte $ff, $ff, $ff
 
@@ -424,11 +425,11 @@ SimultaneousAlphanumericKeysFlag:
     .byte $00
 }
 
-.macro keyboard_read() {
+.macro keyboard_read(address) {
     jsr Keyboard
     bcs exit
     cmp #$ff
     beq exit
-    sta LAST_KEY
+    sta address
 exit:
 }

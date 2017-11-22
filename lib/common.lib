@@ -97,7 +97,7 @@ exit:
 }
 
 .macro debug_address(title) {
-    .print title + toHexString(*)
+    .print title + " " + toHexString(*)
 }
 
 //  VIC-II COLORS

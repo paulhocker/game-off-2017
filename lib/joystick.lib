@@ -30,11 +30,6 @@
 */
 .macro joystick_read(port, address) {
 
-    .if (port != JOY_PORT_A || port != JOY_PORT_B) {
-        .print "Invalid Joystick Port Given"
-        .asserterror
-    }
-
     lda #$ff
     sta port
     lda port

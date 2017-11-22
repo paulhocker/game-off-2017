@@ -9,7 +9,6 @@
 */
 
 #import "include.asm"
-
 #import "lib/vic2.lib"
 #import "lib/raster.lib"
 #import "lib/common.lib"
@@ -56,5 +55,7 @@ BS: {
 #import "intro.asm"
 #import "hiscore.asm"
 #import "raster.asm"
-#import "data.asm"
 #import "keyboard.asm"
+#import "input.asm"
+
+#import "data.asm"
