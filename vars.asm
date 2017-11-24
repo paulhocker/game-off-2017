@@ -14,6 +14,9 @@
 .print "rasterCount: " + toHexString(*)
 rasterCount:   .byte 0
 
+.print "systemState:" + toHexString(*)
+systemState:    .byte 0
+
 .print "gameState: " + toHexString(*)
 gameState:     .byte 0
 
@@ -32,7 +35,9 @@ lives:          .byte 0
 .print "score: " + toHexString(*)
 score:          .byte 0,0,0
 
-.print "hiscore" + toHexString(*)
+.print "hiscore: " + toHexString(*)
 hiscore:        .byte 0,0,0
 
+.print "bRandom: " + toHexString(*)
+bRandom:         .byte 0
 

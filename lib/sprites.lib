@@ -14,3 +14,10 @@
     sta VIC2 + (number * 2)
     sta VIC2 + (number * 2) + 1
 }
+
+.macro move_sprite(number, x, y) {
+    lda #x 
+    sta VIC2_SP0X + number
+    lda #y 
+    sta VIC2_SP0Y + number
+}

@@ -23,7 +23,7 @@ MAIN: {
 start:
 
     jsr clear
-    change_game_state(STATE_INTRO)
+    change_system_state(SYS_STATE_INTRO)
 
 loop:
 
@@ -34,27 +34,27 @@ loop:
     
     lda gameState
 
-!:  cmp #STATE_INTRO
+!:  cmp #SYS_STATE_INTRO
     bne !+
     jmp INTRO.start
 
-!:  cmp #STATE_TITLE
+!:  cmp #SYS_STATE_TITLE
     bne !+
     jmp TITLE.start
 
-!:  cmp #STATE_HELP
+!:  cmp #SYS_STATE_HELP
     bne !+
     jmp HELP.start
 
-!:  cmp #STATE_HISCORE
+!:  cmp #SYS_STATE_HISCORE
     bne !+
     jmp HISCORE.start
 
-!:  cmp #STATE_GAME
+!:  cmp #SYS_STATE_GAME
     bne !+
     jmp GAME.start
 
-!:  cmp #STATE_QUIT
+!:  cmp #SYS_STATE_QUIT
     bne !+
     jmp exit
 

@@ -10,10 +10,13 @@
 
 #import "include.asm"
 #import "input.asm"
-#import "vars.asm"
+#import "vars.asm" 
+#import "random.asm"
 #import "lib/vic2.lib"
 #import "lib/raster.lib"
 #import "lib/common.lib"
+#import "lib/sprites.lib"
+#import "lib/random.lib"
 
 
 /*
@@ -27,6 +30,9 @@
 GAME: {
 
 start:
+
+    lda #MAX_GAME_STATE
+    sta gameState
 
     debug_address("GAME.start:")
 
@@ -60,11 +66,11 @@ start:
     lda #$c3
     sta $83f8
 
-
-
 loop:
 
     debug_address("GAME.loop:")
+
+    jsr RANDOM.getRandomNumber
 
     jsr INPUT.read
 
@@ -74,12 +80,50 @@ loop:
     
     cmp #$01
     beq inc_score
+    
+    dec gameState
+    bne state
+
+    lda #MAX_GAME_STATE
+    sta gameState
+
+state:
+
+    lda gameState
+
+input:
+
+    cmp #GAME_STATE_INPUT
+    bne logic
+
+logic:
+
+    cmp #GAME_STATE_LOGIC
+    bne move
+
+move:
+
+    cmp #GAME_STATE_MOVE
+    bne draw
+
+draw:
+
+    cmp #GAME_STATE_DRAW
+    bne effect
+
+effect:
+
+    cmp #GAME_STATE_EFFECT
+    bne loop
+
+
+next:
 
     jmp loop
 
 exit:
 
-    change_game_state(STATE_TITLE)
+    change_system_state(SYS_STATE_TITLE)
     lda #$00
     sta inputKey
 

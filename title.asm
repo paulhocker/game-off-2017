@@ -33,7 +33,7 @@ loop:
     cmp #$20
     bne loop
 
-    change_game_state(STATE_GAME)
+    change_system_state(SYS_STATE_GAME)
     lda #$00
     sta inputKey
 

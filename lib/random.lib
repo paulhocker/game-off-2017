@@ -1,0 +1,22 @@
+/*
+    copyright 2017 SpockerDotNet LLC
+    released under MIT License.
+
+    include.asm
+
+    include file for all screens
+
+*/
+#importonce
+
+.macro generate_random_number(randseed) {
+
+random:
+
+    lda $b00 
+    adc randseed
+    adc $d012 
+    sta randseed
+    inc random + 1
+
+}
