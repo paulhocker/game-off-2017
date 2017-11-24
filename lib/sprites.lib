@@ -16,8 +16,8 @@
 }
 
 .macro move_sprite(number, x, y) {
-    lda #x 
+    lda x 
     sta VIC2_SP0X + number
-    lda #y 
+    lda y 
     sta VIC2_SP0Y + number
 }

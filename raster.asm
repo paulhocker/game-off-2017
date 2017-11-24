@@ -15,6 +15,10 @@
 #import "lib/vic2.lib"
 #import "lib/common.lib"
 
+.var raster_split = 36
+.var sprite_buffer = 8
+.var sprite_margin = 4
+
 .macro init_game_raster() {
 
     init_raster_interrupt(rasterPos1, RASTER_1)
@@ -38,10 +42,66 @@ RASTER_1: {
     sta VIC2_BGCOL2
 
     //jsr MUSIC_PLAY
-
-    set_interrupt_vector(rasterPos2, RASTER_2)
+    
+    set_interrupt_vector(rasterPos1 + (1 * raster_split), RASTER_SPRITE_0)
+    //set_interrupt_vector(rasterPos2, RASTER_2)
 
     end_interrupt()
+}
+
+RASTER_SPRITE_0: {
+
+    start_interrupt()
+    .var raster =rasterPos1 + 2 + (1 * raster_split);
+    raster_wait(raster)
+    draw_all_sprites(raster + sprite_buffer + sprite_margin, 0)
+    set_interrupt_vector(rasterPos1 + (2 * raster_split), RASTER_SPRITE_1)
+    end_interrupt()
+
+}
+
+RASTER_SPRITE_1: {
+
+    start_interrupt()
+    .var raster = rasterPos1 + 2 + (2 * raster_split);
+    raster_wait(raster)
+    draw_all_sprites(raster + sprite_buffer + sprite_margin, 1)
+    set_interrupt_vector(rasterPos1 + (3 * raster_split), RASTER_SPRITE_2)
+    end_interrupt()
+
+}
+
+RASTER_SPRITE_2: {
+
+    start_interrupt()
+    .var raster = rasterPos1 + 2 + (3 * raster_split);
+    raster_wait(raster)
+    draw_all_sprites(raster + sprite_buffer + sprite_margin, 0)
+    set_interrupt_vector(rasterPos1 + (4 * raster_split), RASTER_SPRITE_3)
+    end_interrupt()
+
+}
+
+RASTER_SPRITE_3: {
+
+    start_interrupt()
+    .var raster = rasterPos1 + 2 + (4 * raster_split);
+    raster_wait(raster)
+    draw_all_sprites(raster + sprite_buffer + sprite_margin, 1)
+    set_interrupt_vector(rasterPos1 + (5 * raster_split), RASTER_SPRITE_4)
+    end_interrupt()
+
+}
+
+RASTER_SPRITE_4: {
+
+    start_interrupt()
+    .var raster = rasterPos1 + 2 + (5 * raster_split);
+    raster_wait(raster)
+    draw_all_sprites(raster + sprite_buffer + sprite_margin, 0)
+    set_interrupt_vector(rasterPos2, RASTER_2)
+    end_interrupt()
+
 }
 
 //  lower panel interrupt
@@ -58,7 +118,8 @@ RASTER_2: {
 
     jsr DEBUG.show
 
-    set_interrupt_vector(rasterPos3, RASTER_3)
+    inc rasterCount
+    set_interrupt_vector(rasterPos1, RASTER_1)
 
     end_interrupt() 
 }
@@ -68,6 +129,9 @@ RASTER_3: {
 
     start_interrupt()
 
+    lda #$01
+    sta $d021
+
     //  set screen and char memory
     lda #%00001010
     sta $d018
@@ -76,7 +140,23 @@ RASTER_3: {
 
     inc rasterCount
 
+    lda #$00
+    sta $d021
+
     end_interrupt()
+}
+
+.macro raster_wait(line_number) {
+!wait:
+  lda #line_number
+  cmp $d012
+  bne !wait-
+  bit $d011
+  .if (line_number <= 255) {
+    bmi !wait-
+  } else {
+    bpl !wait-
+  }
 }
 
 WAIT_RASTER: {
@@ -131,5 +211,54 @@ DEBUG: {
 
 .macro wait_raster() {
     jsr WAIT_RASTER
+}
+
+.macro border(color) {
+  lda #color
+  sta $d020
+}
+
+.macro background(color) {
+  lda #color
+  sta $d021
+}
+
+.macro draw_all_sprites(position_y, rev) {
+  ldy #position_y
+  .for (var i = 5; i < 8; i++) {
+
+    tya
+    sta VIC2_SP0X + 2*i + 1
+    .var position_x = 0
+    .if (rev == 0) {
+        .eval position_x = 45 + 35*i }
+  
+
+  .if (rev == 1) {
+        .eval position_x = 344 - 35*i }
+  
+
+    lda #position_x
+    sta VIC2_SP0X + 2*i
+  .if (position_x >= 256) {
+    sec
+  } else {
+    clc
+  }
+    bcc no_overflow
+  overflow:
+    lda VIC2_MSGIX
+    ora #1<<i
+    jmp overflow_end
+  no_overflow:
+    lda VIC2_MSGIX
+    and #255 - [1<<i] 
+  overflow_end:
+    sta VIC2_MSGIX
+
+    //lda #SPRITE_BITMAPS + i
+    //sta sprites.pointers + i
+
+  }
 }
 
