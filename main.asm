@@ -10,8 +10,8 @@
 */
 #importonce
 
-#import "include.asm"
-#import "vars.asm"
+//#import "include.asm"
+//#import "vars.asm"
 #import "lib/vic2.lib"
 #import "lib/raster.lib"
 #import "lib/common.lib"
@@ -52,7 +52,7 @@ loop:
 
 !:  cmp #SYS_STATE_GAME
     bne !+
-    jmp GAME.start
+    jmp GAME.init
 
 !:  cmp #SYS_STATE_QUIT
     bne !+
@@ -71,7 +71,7 @@ exit:
         sta VIC2_BGCOL0
 
         clear_screen(32, 0)
-        clear_color(0)
+        clear_color(12)
 
         reset_sprites()
         

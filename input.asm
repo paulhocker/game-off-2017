@@ -51,18 +51,9 @@
 */
 #importonce
 
-#import "keyboard.asm"
-#import "vars.asm"
+//#import "keyboard.asm"
+//#import "vars.asm"
 #import "lib/joystick.lib"
-
-.const INPUT_KEYBOARD = 0
-.const INPUT_JOYSTICK_A = 1
-.const INPUT_JOYSTICK_B = 2
-
-.macro set_input(input) {
-    lda #input
-    sta inputMode
-}
 
 
 INPUT: {

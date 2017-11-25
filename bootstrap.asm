@@ -55,7 +55,8 @@ BS: {
 #import "intro.asm"
 #import "hiscore.asm"
 #import "raster.asm"
-#import "keyboard.asm"
 #import "input.asm"
+#import "level.asm"
+#import "keyboard.asm"
 
 #import "data.asm"

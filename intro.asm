@@ -11,8 +11,8 @@
 */
 #importonce
 
-#import "include.asm"
-#import "keyboard.asm"
+//#import "include.asm"
+//#import "keyboard.asm"
 #import "lib/common.lib"
 #import "lib/vic2.lib"
 

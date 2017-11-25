@@ -8,15 +8,18 @@
 */
 #importonce
 
-#import "include.asm"
-#import "input.asm"
-#import "vars.asm" 
-#import "random.asm"
+//#import "include.asm"
+//#import "input.asm"
+//#import "vars.asm" 
+//#import "random.asm"
+//#import "level.asm"
+//#import "data.asm"
 #import "lib/vic2.lib"
 #import "lib/raster.lib"
 #import "lib/common.lib"
 #import "lib/sprites.lib"
 #import "lib/random.lib"
+#import "lib/input.lib"
 
 
 /*
@@ -24,10 +27,31 @@
     screen buffer
 */
 
-.label GAME_SCREEN = $9800
-.label GAME_BUFFER = $9c00
+.label GAME_SCREEN = $8000
+.label GAME_BUFFER = $8800
 
 GAME: {
+
+init:
+
+    debug_address("GAME.init:")
+
+    lda #<MEM_MAP_01
+    sta parm1
+    lda #>MEM_MAP_01
+    sta parm1 + 1
+    lda #<GAME_SCREEN
+    sta parm2 
+    lda #>GAME_SCREEN
+    sta parm2 + 1
+    
+
+    debug_address("clear_color: ")
+    clear_screen(32, 0)
+    clear_color(12)
+    print_text(TITLE, $8000+(40*22), "@")
+
+    jsr LEVEL.load
 
 start:
 
@@ -42,9 +66,6 @@ start:
     sta VIC2_EXTCOL
     sta VIC2_BGCOL0
 
-    clear_screen(32, 0)
-    clear_color(1)
-    print_text(TITLE, $8000+(40*22), "@")
 
     //  show a sprite
     lda #%11111111
@@ -113,34 +134,55 @@ state:
 
     lda gameState
 
-input:
+chk_input:
 
     cmp #GAME_STATE_INPUT
-    bne logic
+    beq input
+    jmp chk_logic
+
+input:
+
+    jmp next
+
+chk_logic:
+
+    cmp #GAME_STATE_LOGIC
+    beq logic
+    jmp chk_move
 
 logic:
 
-    cmp #GAME_STATE_LOGIC
-    bne move
+    jmp next
+
+chk_move:
+
+    cmp #GAME_STATE_MOVE
+    beq move
+    jmp chk_draw
 
 move:
 
-    cmp #GAME_STATE_MOVE
-    bne chk_draw
+    jmp next
 
 chk_draw:
 
     cmp #GAME_STATE_DRAW
     beq draw
-    jmp effect
+    jmp chk_effect
 
 draw:
 
+    jmp next
   
-effect:
+chk_effect:
 
     cmp #GAME_STATE_EFFECT
-    bne next
+    beq effect
+    jmp next
+
+effect:
+
+    jmp next
 
 next:
 

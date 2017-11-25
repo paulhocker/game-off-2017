@@ -8,7 +8,7 @@
 
 */#importonce
 
-#import "include.asm"
+//#import "include.asm"
 
 HISCORE: {
 

@@ -39,5 +39,7 @@ score:          .byte 0,0,0
 hiscore:        .byte 0,0,0
 
 .print "bRandom: " + toHexString(*)
-bRandom:         .byte 0
+bRandom:        .byte 0
 
+.print "level:" + toHexString(*)
+level:          .byte 0

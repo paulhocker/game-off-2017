@@ -9,8 +9,8 @@
 
 #importonce
 
-#import "include.asm"
-#import "vars.asm"
+//#import "include.asm"
+//#import "vars.asm"
 #import "lib/raster.lib"
 #import "lib/vic2.lib"
 #import "lib/common.lib"
@@ -34,15 +34,14 @@ RASTER_1: {
     lda #%00001000
     sta $d018
 
-    lda #$18
-    sta $d016
-    lda #$10
-    sta VIC2_BGCOL1
-    lda #$11
-    sta VIC2_BGCOL2
+    //lda #$18
+    //sta $d016
 
-    //jsr MUSIC_PLAY
-    
+    //lda #$10
+    //sta VIC2_BGCOL1
+    //lda #$11
+    //sta VIC2_BGCOL2
+
     set_interrupt_vector(rasterPos1 + (1 * raster_split), RASTER_SPRITE_0)
     //set_interrupt_vector(rasterPos2, RASTER_2)
 
@@ -119,6 +118,7 @@ RASTER_2: {
     jsr DEBUG.show
 
     inc rasterCount
+
     set_interrupt_vector(rasterPos1, RASTER_1)
 
     end_interrupt() 
@@ -129,19 +129,14 @@ RASTER_3: {
 
     start_interrupt()
 
-    lda #$01
-    sta $d021
-
     //  set screen and char memory
     lda #%00001010
     sta $d018
 
+    jsr MUSIC_PLAY
+    
     set_interrupt_vector(rasterPos1, RASTER_1)
 
-    inc rasterCount
-
-    lda #$00
-    sta $d021
 
     end_interrupt()
 }
