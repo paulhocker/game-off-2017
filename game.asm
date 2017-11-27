@@ -8,27 +8,19 @@
 */
 #importonce
 
-//#import "include.asm"
-//#import "input.asm"
-//#import "vars.asm" 
-//#import "random.asm"
-//#import "level.asm"
-//#import "data.asm"
 #import "lib/vic2.lib"
 #import "lib/raster.lib"
 #import "lib/common.lib"
 #import "lib/sprites.lib"
 #import "lib/random.lib"
 #import "lib/input.lib"
+#import "game/game.lib"
 
 
 /*
     location of the screen and
     screen buffer
 */
-
-.label GAME_SCREEN = $8000
-.label GAME_BUFFER = $8800
 
 GAME: {
 
@@ -55,12 +47,12 @@ init:
 
 start:
 
-    lda #MAX_GAME_STATE
-    sta gameState
-
     debug_address("GAME.start:")
 
-    set_input(INPUT_KEYBOARD)
+    lda #$00
+    sta gameState
+
+    set_input(INPUT_JOYSTICK_A)
 
     lda #COLOR_BLACK
     sta VIC2_EXTCOL
@@ -79,6 +71,38 @@ start:
         lda #$30 + (i*36)
         sta $d001 + (i*2)
     }
+
+    lda #$02
+    sta parm1
+    lda #$01
+    sta parm2
+    
+    jsr get_tile
+    lda rtrn1
+    sta nextTile
+
+    jsr get_sprite_pos
+    lda rtrn1
+    sta playerX
+    lda rtrn2
+    sta playerY
+
+    lda #$07
+    sta parm1
+    lda #$01
+    sta parm2
+    jsr get_sprite_pos
+    lda rtrn1
+    sta nextX
+    lda rtrn2
+    sta nextY
+  
+    lda #$01
+    sta playerMoving
+
+    lda #GAME_MOVE_RIGHT
+    sta moveDirection
+
     lda #$ff
     sta $d01c
     lda #$01
@@ -110,79 +134,66 @@ loop:
 
     debug_address("GAME.loop:")
 
-    jsr INPUT.read
- 
-    lda inputKey
-    cmp #$20
-    bne !+
-
-    jmp exit
-    
-!:  cmp #$01
+    inc gameState
+    lda gameState
+    cmp #MAX_GAME_STATE
     bne next_state
-    jsr inc_score
+
+    lda #$00
+    sta gameState
 
 next_state:
 
-    dec gameState
-    bne state
-
-    lda #MAX_GAME_STATE
-    sta gameState
-
-state:
-
-    lda gameState
-
 chk_input:
 
+    lda gameState
     cmp #GAME_STATE_INPUT
     beq input
     jmp chk_logic
 
 input:
 
-    jmp next
+    jsr GAME_INPUT.start
 
 chk_logic:
 
+    lda gameState
     cmp #GAME_STATE_LOGIC
     beq logic
     jmp chk_move
 
 logic:
 
-    jmp next
-
 chk_move:
 
+    lda gameState
     cmp #GAME_STATE_MOVE
     beq move
     jmp chk_draw
 
 move:
 
-    jmp next
+    jsr GAME_MOVE.start
 
 chk_draw:
 
+    lda gameState
     cmp #GAME_STATE_DRAW
     beq draw
     jmp chk_effect
 
 draw:
 
-    jmp next
+    jsr GAME_DRAW.start
   
 chk_effect:
 
+    lda gameState
     cmp #GAME_STATE_EFFECT
     beq effect
     jmp next
 
 effect:
-
-    jmp next
 
 next:
 
@@ -214,6 +225,94 @@ inc_score:
 
 
 TITLE: .text "game@"
-
 }
 
+/*
+    get the tile from an x,y position
+
+    parm1   tile x pos
+    parm2   tile y pos
+
+    rtrn1   tile number
+
+    there is never more than 220 tiles in
+    a map so we can save some cycles and 
+    do some cheap multiplication here 
+    to get our tile number
+
+*/
+get_tile: {
+
+    lda parm1
+    sta temp1 
+    lda parm2
+    sta temp2
+
+    ldx temp1
+    ldy temp2 
+
+    lda #$00
+
+!:
+    clc
+    adc #$0a
+    dey
+    bne !-
+
+!:
+    clc
+    adc #$01
+    dex
+    bne !-
+
+    sta rtrn1
+
+    rts
+}
+
+/*
+    return world position from tile position
+
+    parm1   tile x pos
+    parm1   tile y pos
+
+    rtrn1   sprite x pos
+    rtrn2   sprite y pos
+
+*/
+get_sprite_pos: {
+
+    lda parm1
+    sta temp1 
+    lda parm2 
+    sta temp2
+
+    ldx temp1
+    ldy temp2 
+
+    lda #$14
+
+    //  x
+!:
+    clc
+    adc #$10
+    dex
+    bne !-
+
+    sta rtrn1
+!:
+    lda #$30
+!:
+    clc
+    adc #$10
+    dey
+    bne !-
+
+    sta rtrn2
+
+    rts
+}
+
+#import "game/move.asm"
+#import "game/draw.asm"
+#import "game/input.asm"

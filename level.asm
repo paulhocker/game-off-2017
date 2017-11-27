@@ -29,6 +29,7 @@ load:
     clc 
     lda #$28
     adc temp3
+    sta temp3
 
     //  color memory
     lda #<$d800
@@ -43,6 +44,7 @@ load:
     clc
     lda #$28
     adc temp5
+    sta temp5
 
 draw:
 
@@ -73,7 +75,7 @@ loop:
     sta (temp2), y
     lda MEM_MAP_CHARSET_TILE + 2, x
     sta (temp3), y
-    lda #$0c
+    lda #$04
     sta (temp4), y
     sta (temp5), y
     iny 
@@ -81,7 +83,7 @@ loop:
     sta (temp2), y
     lda MEM_MAP_CHARSET_TILE + 3, x
     sta (temp3), y
-    lda #$0c
+    lda #$04
     sta (temp4), y
     sta (temp5), y
 

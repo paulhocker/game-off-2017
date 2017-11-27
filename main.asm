@@ -29,7 +29,6 @@ loop:
 
     debug_address("MAIN.loop:")
 
-    wait_raster()
     jsr clear
     
     lda gameState

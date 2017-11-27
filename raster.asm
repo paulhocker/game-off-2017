@@ -34,6 +34,9 @@ RASTER_1: {
     lda #%00001000
     sta $d018
 
+    lda #$0f
+    sta $d020
+
     //lda #$18
     //sta $d016
 
@@ -42,66 +45,34 @@ RASTER_1: {
     //lda #$11
     //sta VIC2_BGCOL2
 
-    set_interrupt_vector(rasterPos1 + (1 * raster_split), RASTER_SPRITE_0)
-    //set_interrupt_vector(rasterPos2, RASTER_2)
-
-    end_interrupt()
-}
-
-RASTER_SPRITE_0: {
-
-    start_interrupt()
+    //set_interrupt_vector(rasterPos1 + (1 * raster_split), RASTER_SPRITE_0)
+    
+    
     .var raster =rasterPos1 + 2 + (1 * raster_split);
     raster_wait(raster)
     draw_all_sprites(raster + sprite_buffer + sprite_margin, 0)
-    set_interrupt_vector(rasterPos1 + (2 * raster_split), RASTER_SPRITE_1)
-    end_interrupt()
 
-}
-
-RASTER_SPRITE_1: {
-
-    start_interrupt()
-    .var raster = rasterPos1 + 2 + (2 * raster_split);
+    .eval raster = rasterPos1 + 2 + (2 * raster_split);
     raster_wait(raster)
     draw_all_sprites(raster + sprite_buffer + sprite_margin, 1)
-    set_interrupt_vector(rasterPos1 + (3 * raster_split), RASTER_SPRITE_2)
-    end_interrupt()
 
-}
-
-RASTER_SPRITE_2: {
-
-    start_interrupt()
-    .var raster = rasterPos1 + 2 + (3 * raster_split);
+    .eval raster = rasterPos1 + 2 + (3 * raster_split);
     raster_wait(raster)
     draw_all_sprites(raster + sprite_buffer + sprite_margin, 0)
-    set_interrupt_vector(rasterPos1 + (4 * raster_split), RASTER_SPRITE_3)
-    end_interrupt()
 
-}
-
-RASTER_SPRITE_3: {
-
-    start_interrupt()
-    .var raster = rasterPos1 + 2 + (4 * raster_split);
+    .eval raster = rasterPos1 + 2 + (4 * raster_split);
     raster_wait(raster)
     draw_all_sprites(raster + sprite_buffer + sprite_margin, 1)
-    set_interrupt_vector(rasterPos1 + (5 * raster_split), RASTER_SPRITE_4)
-    end_interrupt()
 
-}
-
-RASTER_SPRITE_4: {
-
-    start_interrupt()
-    .var raster = rasterPos1 + 2 + (5 * raster_split);
+    .eval raster = rasterPos1 + 2 + (5 * raster_split);
     raster_wait(raster)
     draw_all_sprites(raster + sprite_buffer + sprite_margin, 0)
+
     set_interrupt_vector(rasterPos2, RASTER_2)
-    end_interrupt()
 
+    end_interrupt()
 }
+
 
 //  lower panel interrupt
 RASTER_2: {
@@ -119,7 +90,7 @@ RASTER_2: {
 
     inc rasterCount
 
-    set_interrupt_vector(rasterPos1, RASTER_1)
+    set_interrupt_vector(rasterPos3, RASTER_3)
 
     end_interrupt() 
 }
@@ -133,10 +104,9 @@ RASTER_3: {
     lda #%00001010
     sta $d018
 
-    jsr MUSIC_PLAY
+    //jsr MUSIC_PLAY
     
     set_interrupt_vector(rasterPos1, RASTER_1)
-
 
     end_interrupt()
 }
@@ -156,7 +126,7 @@ RASTER_3: {
 
 WAIT_RASTER: {
     lda rasterCount
-    cmp #$01
+    cmp #$00
     bcc WAIT_RASTER
     lda #$00
     sta rasterCount

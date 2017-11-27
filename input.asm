@@ -54,11 +54,11 @@
 //#import "keyboard.asm"
 //#import "vars.asm"
 #import "lib/joystick.lib"
-
+#import "lib/keyboard.lib"
 
 INPUT: {
 
-.print "[INPUT].read:" + toHexString(*)
+    debug_address("INPUT.read:")
 
 read:
 
@@ -98,6 +98,56 @@ readJoystickB:
 readKeyboard:
 
     keyboard_read(inputKey)
+
+    lda inputMove
+    cmp #$00
+    bne functionKeys
+
+    lda inputKey
+    cmp #$20
+    bne !+
+    lda #GAME_MOVE_FIRE
+    sta inputMove
+    jmp exit
+
+!:
+    cmp #$01
+    bne !+
+    lda #GAME_MOVE_LEFT
+    sta inputMove
+    jmp exit
+
+!:
+    lda inputKey
+    cmp #$04
+    bne !+
+    lda #GAME_MOVE_RIGHT
+    sta inputMove
+    jmp exit
+
+!:
+    lda inputKey
+    cmp #$13
+    bne !+
+    lda #GAME_MOVE_DOWN
+    sta inputMove
+    jmp exit
+
+!:
+    lda inputKey
+    cmp #$17
+    bne !+
+    lda #GAME_MOVE_UP
+    sta inputMove
+    jmp exit
+
+!:
+
+functionKeys:
+
+
+exit:
+
     rts
 
 }

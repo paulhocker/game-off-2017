@@ -23,7 +23,7 @@
     //  set the timer interrupt off
     lda #$7f
     sta $dc0d
-    sta $dd0d
+    //sta $dd0d
 
     //  set the raster interrupt on
     lda #$01
@@ -32,9 +32,11 @@
     //  set the next interrupt to our preferred location
     set_interrupt_vector(position, routine)
 
-    asl $d019
-    bit $dc0d
-    bit $dd0d
+    inc $d019
+    lda $dc0d
+    //asl $d019
+    //bit $dc0d
+    //bit $dd0d
 
     cli
 }
@@ -46,14 +48,16 @@
 
 .macro end_interrupt() {
 
-    asl $d019
-    jmp $ea31
+    inc $d019
+    lda $dc0d
+
+    //asl $d019
+
+    //jmp $ea31
+    jmp $ea81
 }
 
 .macro set_interrupt_vector(position, routine) {
-
-    lda #position
-    sta $d012
 
     lda #$1b
     sta $d011
@@ -62,5 +66,8 @@
     sta VECTOR_IRQ
     lda #>routine
     sta VECTOR_IRQ + 1
+
+    lda #position
+    sta $d012
 
 }

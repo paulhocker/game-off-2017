@@ -37,15 +37,14 @@
 .var rasterPos3 = 250
 
 //  GAME STATE
-.const GAME_STATE_INPUT     = 5
-.const GAME_STATE_LOGIC     = 4
-.const GAME_STATE_MOVE      = 3
-.const GAME_STATE_DRAW      = 2
-.const GAME_STATE_EFFECT    = 1
 .const GAME_STATE_MANAGE    = 0
+.const GAME_STATE_INPUT     = 1
+.const GAME_STATE_MOVE      = 1
+.const GAME_STATE_LOGIC     = 2
+.const GAME_STATE_DRAW      = 3
+.const GAME_STATE_EFFECT    = 4
 
 .const MAX_GAME_STATE       = 5
-.const MIN_GAME_STATE       = 0
 
 //  SYSTEM STATES
 .const SYS_STATE_TITLE      = 1
@@ -55,6 +54,8 @@
 .const SYS_STATE_INTRO      = 5
 .const SYS_STATE_QUIT       = 0
 .const SYS_STATE_DEBUG      = 99
+
+.const PLAYER_SPEED         = 2
 
 .macro change_system_state(state) {
     lda #state

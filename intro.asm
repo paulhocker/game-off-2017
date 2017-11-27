@@ -32,10 +32,16 @@ loop:
 
     debug_address("INTRO.loop:")
 
-    keyboard_read(inputKey)
+    jsr INPUT.read
+    lda inputMove
+    cmp #GAME_MOVE_FIRE
+    beq next_state
+
     lda inputKey
     cmp #$20
     bne loop
+
+next_state:
 
     change_system_state(SYS_STATE_TITLE)
     lda #$00

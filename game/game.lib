@@ -1,0 +1,12 @@
+
+#importonce
+
+.const GAME_MOVE_STOP = 0
+.const GAME_MOVE_UP = 1
+.const GAME_MOVE_DOWN = 2
+.const GAME_MOVE_LEFT = 4
+.const GAME_MOVE_RIGHT = 8
+.const GAME_MOVE_FIRE = 20
+
+.label GAME_SCREEN = $8000
+.label GAME_BUFFER = $8800
