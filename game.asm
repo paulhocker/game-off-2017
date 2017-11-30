@@ -59,50 +59,6 @@ start:
     sta VIC2_BGCOL0
 
 
-    //  show a sprite
-    lda #%11111111
-    sta VIC2_SPENA
-    lda #$00
-    sta $d010
-    .for (var i = 0; i < 4; i++) {
-        
-        lda #$30
-        sta $d000 + (i*2)
-        lda #$30 + (i*36)
-        sta $d001 + (i*2)
-    }
-
-    lda #$02
-    sta parm1
-    lda #$01
-    sta parm2
-    
-    jsr get_tile
-    lda rtrn1
-    sta nextTile
-
-    jsr get_sprite_pos
-    lda rtrn1
-    sta playerX
-    lda rtrn2
-    sta playerY
-
-    lda #$07
-    sta parm1
-    lda #$01
-    sta parm2
-    jsr get_sprite_pos
-    lda rtrn1
-    sta nextX
-    lda rtrn2
-    sta nextY
-  
-    lda #$01
-    sta playerMoving
-
-    lda #GAME_MOVE_RIGHT
-    sta moveDirection
-
     lda #$ff
     sta $d01c
     lda #$01
@@ -128,6 +84,92 @@ start:
     sta $83fe
     lda #$c2
     sta $83ff
+
+    //  turn all sprites on except last three
+
+    lda #%00011111
+    sta VIC2_SPENA
+
+    //  reset the msb for all sprites
+
+    lda #%00000000
+    sta VIC2_MSGIX
+    sta spriteMsb
+
+    /*
+    lda #$00
+    sta $d010
+    .for (var i = 0; i < 4; i++) {
+        
+        lda #$30
+        sta $d000 + (i*2)
+        lda #$30 + (i*36)
+        sta $d001 + (i*2)
+    }
+    */
+
+    //  initialize player
+
+    lda #$00
+    sta v_actors.x + ACTOR_PLAYER
+    sta v_actors.x + 1 + ACTOR_PLAYER
+    sta v_actors.y + ACTOR_PLAYER    
+    sta v_actors.y + 1 + ACTOR_PLAYER    
+    sta v_actors.speed + ACTOR_PLAYER    
+    sta v_actors.speed + 1 + ACTOR_PLAYER    
+    sta v_actors.tileX + ACTOR_PLAYER    
+    sta v_actors.tileX + 1 + ACTOR_PLAYER    
+    sta v_actors.tileY + ACTOR_PLAYER    
+    sta v_actors.tileY + 1 + ACTOR_PLAYER    
+    sta v_actors.dir + ACTOR_PLAYER
+    sta v_actors.tile + ACTOR_PLAYER
+    sta v_actors.color + ACTOR_PLAYER
+    sta v_actors.sprite + ACTOR_PLAYER
+    sta v_actors.isMoving + ACTOR_PLAYER
+    sta v_actors.lastTile + ACTOR_PLAYER
+    sta v_actors.nextTile + ACTOR_PLAYER
+
+    //  player color and sprite
+
+    lda #$01
+    sta v_actors.color + ACTOR_PLAYER
+    lda #$c3
+    sta v_actors.sprite + ACTOR_PLAYER
+
+    //  starting speed = 0.5 pixels/sec
+    lda #$00
+    sta v_actors.speed + ACTOR_PLAYER
+    lda #$80
+    sta v_actors.speed + ACTOR_PLAYER + 1
+
+    //  get starting tile x/y pos
+    //  TODO: get starting tile from map
+
+
+
+    lda #$02
+    sta parm1
+    sta v_actors.tileX + ACTOR_PLAYER
+    lda #$01
+    sta parm2
+    sta v_actors.tileY + ACTOR_PLAYER
+    jsr getTile
+    
+    //  this is now the players current tile
+
+    lda rtrn1
+    sta v_actors.tile + ACTOR_PLAYER
+
+    //  get the tile world pos
+
+    jsr GAME.getTileWorldPos
+
+    //  this is now the players starting x/y pos
+
+    lda rtrn1
+    sta v_actors.x + ACTOR_PLAYER
+    lda rtrn2
+    sta v_actors.y + ACTOR_PLAYER
 
 
 loop:
@@ -225,7 +267,7 @@ inc_score:
 
 
 TITLE: .text "game@"
-}
+
 
 /*
     get the tile from an x,y position
@@ -233,7 +275,7 @@ TITLE: .text "game@"
     parm1   tile x pos
     parm2   tile y pos
 
-    rtrn1   tile number
+    rtrn1   tile
 
     there is never more than 220 tiles in
     a map so we can save some cycles and 
@@ -241,7 +283,7 @@ TITLE: .text "game@"
     to get our tile number
 
 */
-get_tile: {
+getTile: {
 
     lda parm1
     sta temp1 
@@ -255,7 +297,7 @@ get_tile: {
 
 !:
     clc
-    adc #$0a
+    adc #$14
     dey
     bne !-
 
@@ -264,6 +306,10 @@ get_tile: {
     adc #$01
     dex
     bne !-
+
+    tay
+
+    lda MEM_MAP_01, y
 
     sta rtrn1
 
@@ -280,7 +326,7 @@ get_tile: {
     rtrn2   sprite y pos
 
 */
-get_sprite_pos: {
+getTileWorldPos: {
 
     lda parm1
     sta temp1 
@@ -311,6 +357,8 @@ get_sprite_pos: {
     sta rtrn2
 
     rts
+}
+
 }
 
 #import "game/move.asm"

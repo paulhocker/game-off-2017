@@ -8,6 +8,7 @@
 
 */
 
+/*
 .var ACTOR_NONE     = 00
 .var ACTOR_EXPLODE  = 01
 .var ACTOR_TEDDY    = 02
@@ -16,5 +17,5 @@
 .var ACTOR_TRIXY    = 05
 .var ACTOR_LURCH    = 06
 .var ACTOR_MELT     = 07
-
+*/
 

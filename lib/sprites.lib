@@ -1,5 +1,6 @@
 #importonce
 #import "vic2.lib"
+#import "lib/bits.lib"
 
 .macro reset_sprites() {
     lda #$00
@@ -15,9 +16,60 @@
     sta VIC2 + (number * 2) + 1
 }
 
-.macro move_sprite(number, x, y) {
+.macro move_sprite_to(number, x, y) {
     lda x 
     sta VIC2_SP0X + number
     lda y 
     sta VIC2_SP0Y + number
 }
+
+.macro move_sprite_right(sprite_pos_x, speed) {
+    clc
+    lda sprite_pos_x + 1
+    adc speed + 1
+    sta sprite_pos_x + 1
+    lda sprite_pos_x
+    adc speed + 0
+    sta sprite_pos_x
+    bcc exit
+    flip_bit0 spriteMsb
+
+exit:
+
+}
+
+.macro move_sprite_left(sprite_pos_x, speed) {
+    sec
+    lda sprite_pos_x + 1
+    sbc speed + 1
+    sta sprite_pos_x + 1
+    lda sprite_pos_x
+    sbc speed + 0
+    sta sprite_pos_x
+    bcs exit
+    flip_bit0 spriteMsb
+
+exit:
+
+}
+
+.macro move_sprite_up(sprite_pos_y, speed) {
+    sec
+    lda sprite_pos_y + 1
+    sbc speed + 1
+    sta sprite_pos_y + 1
+    lda sprite_pos_y
+    sbc speed + 0
+    sta sprite_pos_y
+}
+
+.macro move_sprite_down(sprite_pos_y, speed) {
+    clc
+    lda sprite_pos_y + 1
+    adc speed + 1
+    sta sprite_pos_y + 1
+    lda sprite_pos_y
+    adc speed + 0
+    sta sprite_pos_y
+}
+

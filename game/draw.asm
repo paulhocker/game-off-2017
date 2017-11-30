@@ -1,5 +1,9 @@
 #importonce
+
 #import "../vars.asm"
+#import "../lib/vic2.lib"
+#import "../lib/sprites.lib"
+
 
 GAME_DRAW: {
 
@@ -9,23 +13,17 @@ start:
 
     raster_wait(225)
 
-    lda playerX
-    sta $d000
-    lda playerY
-    sta $d001
+    .for (var i = 0; i < 5; i++) {
 
-    lda enemy1X
-    sta $d002
+        lda v_actors.x + i 
+        sta VIC2_SP0X + i * 2
+        lda v_actors.y + i 
+        sta VIC2_SP0Y + i * 2
+    }
 
-    lda enemy2X
-    sta $d004
-    
-    lda enemy3X
-    sta $d006
-    
-    lda enemy4X
-    sta $d008
-    
+    lda spriteMsb
+    sta VIC2_MSGIX
+
 exit:
 
     rts

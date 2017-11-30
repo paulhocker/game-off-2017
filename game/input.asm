@@ -21,10 +21,14 @@ start:
     jsr INPUT.read
     lda inputMove
 
+    //  ignore when nothing is returned
+    
     cmp #$00
     beq exit
 
-    sta moveDirection
+    //  TODO: store the movement commands into a queue
+
+    sta nextMove
 
 exit:
 

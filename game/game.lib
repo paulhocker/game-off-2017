@@ -1,6 +1,12 @@
 
 #importonce
 
+.const ACTOR_PLAYER = 0
+.const ACTOR_MONTY = 1
+.const ACTOR_BIFF = 2
+.const ACTOR_TRIXY = 3
+.const ACTOR_LURCH = 4
+
 .const GAME_MOVE_STOP = 0
 .const GAME_MOVE_UP = 1
 .const GAME_MOVE_DOWN = 2
