@@ -16,181 +16,261 @@ start:
 exit:
 
     rts
-}
 
-movePlayer: {
+    movePlayer: {
 
-    //  if we are still moving, continue
+        //  if we are still moving, continue
 
-    lda v_actors.isMoving + ACTOR_PLAYER
-    cmp #$00
-    bne continueMoving
+        lda v_actors.isMoving + ACTOR_PLAYER
+        cmp #$00
+        bne continueMoving
 
-    //  if next move is nothing, then exit
+        //  if next move is nothing, then exit
 
-    lda nextMove
-    cmp #$00
-    bne !+ 
+        lda nextMove
+        cmp #$00
+        bne !+ 
 
-    jmp stopMoving
+        jmp exit
 
-!:  
-    jsr checkDirection
+    !:  
+        lda nextMove
+        sta parm1
+        lda v_actors.tile + ACTOR_PLAYER
+        sta parm2
+        jsr checkDirection
+        bne !+
+        jmp exit
 
-continueMoving:
+    !:
 
-    lda v_actors.dir + ACTOR_PLAYER
+        lda nextMove
+        sta parm1
+        jsr setNextTile
+        lda #$00
+        sta nextMove
 
-    cmp #GAME_MOVE_LEFT
-    bne !+
-    //dec playerX
-    move_sprite_left(v_actors.x + ACTOR_PLAYER, v_actors.speed + ACTOR_PLAYER)
-    jmp check_pos
-!:
-    cmp #GAME_MOVE_RIGHT
-    bne !+
-    //inc playerX
-    move_sprite_right(v_actors.x + ACTOR_PLAYER, v_actors.speed + ACTOR_PLAYER)
-    jmp check_pos
-!:
-    cmp #GAME_MOVE_UP
-    bne !+
-    //dec playerY
-    move_sprite_up(v_actors.y + ACTOR_PLAYER, v_actors.speed + ACTOR_PLAYER)
-    jmp check_pos
-!:
-    cmp #GAME_MOVE_DOWN
-    bne check_pos
-    //inc playerY
-    move_sprite_down(v_actors.y + ACTOR_PLAYER, v_actors.speed + ACTOR_PLAYER)
+    continueMoving:
 
-/*
-    check the position to see if x/y has
-    been reached
+        lda v_actors.dir + ACTOR_PLAYER
 
-    playerMoving    will be set to #$00 when x/y is reached
+        cmp #GAME_MOVE_LEFT
+        bne !+
+        move_sprite_left(v_actors.x + ACTOR_PLAYER, v_actors.speed + ACTOR_PLAYER)
+        jmp checkPosition
 
-*/
-check_pos: 
+    !:
+        cmp #GAME_MOVE_RIGHT
+        bne !+
+        move_sprite_right(v_actors.x + ACTOR_PLAYER, v_actors.speed + ACTOR_PLAYER)
+        jmp checkPosition
 
-chk_x:
+    !:
+        cmp #GAME_MOVE_UP
+        bne !+
+        move_sprite_up(v_actors.y + ACTOR_PLAYER, v_actors.speed + ACTOR_PLAYER)
+        jmp checkPosition
 
-    lda v_actors.x + ACTOR_PLAYER
-    cmp v_actors.nextX + ACTOR_PLAYER
-    bne exit
+    !:
+        cmp #GAME_MOVE_DOWN
+        bne exit
+        move_sprite_down(v_actors.y + ACTOR_PLAYER, v_actors.speed + ACTOR_PLAYER)
 
-chk_y:
+    /*
+        check the position to see if x/y has
+        been reached
 
-    lda v_actors.y + ACTOR_PLAYER
-    cmp v_actors.nextY + ACTOR_PLAYER
-    bne exit
+        playerMoving    will be set to #$00 when x/y is reached
 
-stopMoving:
+    */
+    debug_address("GAME_MOVE.checkPosition:")
 
-    lda #GAME_MOVE_STOP
-    sta v_actors.dir + ACTOR_PLAYER
+    checkPosition: 
 
-exit:
+    checkPositionX:
 
-    rts
+        lda v_actors.x + ACTOR_PLAYER
+        cmp v_actors.nextX + ACTOR_PLAYER
+        bne exit
+
+    checkPositionY:
+
+        lda v_actors.y + ACTOR_PLAYER
+        cmp v_actors.nextY + ACTOR_PLAYER
+        bne exit
+
+        lda v_actors.tile + ACTOR_PLAYER
+        sta v_actors.lastTile + ACTOR_PLAYER
+        lda v_actors.nextTile + ACTOR_PLAYER
+        sta v_actors.tile + ACTOR_PLAYER
+        lda #$00
+        sta v_actors.nextTile + ACTOR_PLAYER
+
+        //  if we have a next move use it
+
+        lda nextMove
+        beq !+
+        sta parm1
+        lda v_actors.tile + ACTOR_PLAYER
+        sta parm2
+        jsr checkDirection
+        beq !+
+        jsr stopMoving
+        jmp exit
+
+    !:
+
+        lda v_actors.dir
+        sta parm1
+        lda v_actors.tile + ACTOR_PLAYER
+        sta parm2
+        jsr checkDirection
+        bne !+
+        jsr stopMoving
+        jmp exit
+
+    !:
+
+        lda v_actors.dir
+        sta parm1
+        jsr setNextTile
+        lda #$00
+
+    exit:
+
+        rts
+    }
+
+    stopMoving: {
+
+        lda #GAME_MOVE_STOP
+        sta v_actors.dir + ACTOR_PLAYER
+        lda #$00
+        sta v_actors.isMoving + ACTOR_PLAYER
+        rts
+    }
 
 
-}
+    /*
+        set the next tile to move to for an actor
 
-moveEnemy: {
+        parm1   dir of move
+        parm2   actor
+    */
+    setNextTile: { 
+        
+        debug_address("GAME_MOVE.setNextTile:")
 
-    inc enemy1X
+        //  store last tile
 
-    inc enemy2X
+        lda v_actors.tile + ACTOR_PLAYER
+        sta v_actors.lastTile + ACTOR_PLAYER
 
-    inc enemy3X
+        //  clear out current tile
+        lda #$00
+        sta v_actors.tile + ACTOR_PLAYER
 
-    inc enemy4X
+        //  store the new direction for the player
 
-    rts
-}
+        lda parm1  
+        sta v_actors.dir + ACTOR_PLAYER
 
-//  check direction of next move
+        //  change tile based on next move
 
-checkDirection: {
+        cmp #$01
+        bne !+
+        dec v_actors.tileY + ACTOR_PLAYER
 
-    //  'and' the next movement requested
-    //  with the tile index, if anything
-    //  but zero returns, we can move in
-    //  that direction
+    !:
+        cmp #$02
+        bne !+
+        inc v_actors.tileY + ACTOR_PLAYER
 
-    lda v_actors.tile + ACTOR_PLAYER
-    and nextMove
-    bne exit
+    !:
 
-    //  store last tile
+        cmp #$04
+        bne !+
+        dec v_actors.tileX + ACTOR_PLAYER
 
-    lda v_actors.tile + ACTOR_PLAYER
-    sta v_actors.lastTile + ACTOR_PLAYER
+    !:
 
-    //  clear out current tile
-    lda #$00
-    sta v_actors.tile + ACTOR_PLAYER
+        cmp #$08
+        bne !+
+        inc v_actors.tileX + ACTOR_PLAYER
 
-    //  store the new direction for the player
+    !:
 
-    lda nextMove
-    sta v_actors.dir + ACTOR_PLAYER
+        //  get the new tile info
 
-    //  change tile based on next move
+        lda v_actors.tileX + ACTOR_PLAYER
+        sta parm1
+        lda v_actors.tileY + ACTOR_PLAYER
+        sta parm2
+        jsr GAME.getTile
+        lda rtrn1
+        sta v_actors.nextTile + ACTOR_PLAYER
 
-    cmp #$01
-    bne !+
-    dec v_actors.tileY + ACTOR_PLAYER
+        //  get world pos of next tile
 
-!:
-    cmp #$02
-    bne !+
-    inc v_actors.tileY + ACTOR_PLAYER
+        jsr GAME.getTileWorldPos
+        lda rtrn1
+        sta v_actors.nextX + ACTOR_PLAYER
+        lda rtrn2
+        sta v_actors.nextY + ACTOR_PLAYER
 
-!:
+        //  flag that player state is moving
 
-    cmp #$04
-    bne !+
-    dec v_actors.tileX + ACTOR_PLAYER
+        lda #$01
+        sta v_actors.isMoving + ACTOR_PLAYER
 
-!:
+    exit:
 
-    cmp #$08
-    bne !+
-    inc v_actors.tileX + ACTOR_PLAYER
+        rts 
+    }
 
-!:
+    /*
+        check if the direction requested is open
 
-    //  get the new tile info
+        parm1   direction
+        parm2   tile
 
-    lda v_actors.tileX + ACTOR_PLAYER
-    sta parm1
-    lda v_actors.tileY + ACTOR_PLAYER
-    sta parm2
-    jsr GAME.getTile
-    lda rtrn1
-    sta v_actors.nextTile + ACTOR_PLAYER
+        rtrn1   1 if open 0 otherwise
 
-    //  get world pos of next tile
+    */
+    checkDirection: {
 
-    jsr GAME.getTileWorldPos
-    lda rtrn1
-    sta v_actors.nextX + ACTOR_PLAYER
-    lda rtrn2
-    sta v_actors.nextY + ACTOR_PLAYER
+        lda parm1
+        beq closed
+        and parm2
+        beq open
 
-    //  flag that player state is moving
+    closed:
 
-    lda #$01
-    sta v_actors.isMoving + ACTOR_PLAYER
+        lda #$00
+        sta rtrn1
+        jmp exit
 
-    //  clear out the next move queue
+    open:
 
-    lda #$00
-    sta nextMove
+        lda #$01
+        sta rtrn1
 
-exit:
+    exit:
 
-    rts 
+        rts
+    }
+
+    moveEnemy: {
+
+        inc enemy1X
+
+        inc enemy2X
+
+        inc enemy3X
+
+        inc enemy4X
+
+        rts
+    }
+
 }

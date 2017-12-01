@@ -137,9 +137,9 @@ start:
     sta v_actors.sprite + ACTOR_PLAYER
 
     //  starting speed = 0.5 pixels/sec
-    lda #$00
+    lda #$01
     sta v_actors.speed + ACTOR_PLAYER
-    lda #$80
+    lda #$00
     sta v_actors.speed + ACTOR_PLAYER + 1
 
     //  get starting tile x/y pos
@@ -184,7 +184,7 @@ loop:
     lda #$00
     sta gameState
 
-next_state:
+next_state: 
 
 chk_input:
 

@@ -1,13 +1,14 @@
 #importonce
 
 #import "../vars.asm"
+#import "../lib/common.lib"
 #import "../lib/vic2.lib"
 #import "../lib/sprites.lib"
 
 
 GAME_DRAW: {
 
-    debug_address("GAME_DRAW.start:")
+    debug_address("GAME_DRAW.start:") 
 
 start:
 

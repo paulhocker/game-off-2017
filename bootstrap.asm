@@ -39,7 +39,7 @@ BS: {
 
     reset_memory()
 
-    jmp $fce2
+    jmp $fce2  
 }
 
 * = $0900 "VARS"
